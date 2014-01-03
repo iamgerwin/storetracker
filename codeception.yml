@@ -1,0 +1,18 @@
+paths:
+    tests: app/tests
+    log: app/tests/_log
+    data: app/tests/_data
+    helpers: app/tests/_helpers
+settings:
+    bootstrap: _bootstrap.php
+    suite_class: \PHPUnit_Framework_TestSuite
+    colors: true
+    memory_limit: 1024M
+    log: true
+modules:
+    config:
+        Db:
+            dsn: 'mysql:host=192.168.1.10;dbname=fiametta_retail'
+            user: 'root'
+            password: 'adminpass'
+            dump: app/tests/_data/fiametta_retail_dump.sql
