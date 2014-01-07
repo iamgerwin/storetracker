@@ -99,6 +99,10 @@ class Gerwin {
 	{
 		return Branch::where('branch_type_id',4)->where('active',1)->orderBy('branch_name', 'asc')->lists('branch_id');
 	}
+	public static function getBranchKiosk()
+	{
+		return Branch::where('branch_type_id',4)->where('active',1)->orderBy('branch_name', 'asc')->get();
+	}
 	final public static function getSalesDailySummary()
 	{
 		

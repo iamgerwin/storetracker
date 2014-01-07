@@ -10,6 +10,7 @@ active
 
 @section('header')
 <link rel="stylesheet" type="text/css" href="{{URL::to('/')}}/packages/datatables/DT_bootstrap.css">
+<script type="text/javascript" src="https://google.com/jsapi"></script>
 <link rel="stylesheet" href="{{URL::to('/')}}/packages/bootstrap/css/datepicker.css">
 <style type="text/css">
 div#invoiceTabContent{
@@ -34,6 +35,7 @@ div#loadTable{
 
 <script type="text/javascript">
 $(document).ready( function () {
+	$('#isDate').datepicker();
 
 	var nowTemp = new Date();
 	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
@@ -133,6 +135,26 @@ $(document).ready( function () {
 		});
 	});
 } );
+
+$(document).ready( function () {
+	$('button#suminBtn').on('click',function() {
+		var Obj = {};
+		Obj.date= $('input#isDate').val();
+		Obj.branches= $('select#branchBox').val();
+		$.ajax({
+			  type: "POST",
+			  url: "sellout/summary",
+			  cache: false,
+			  data: Obj,
+			  beforeSend: function (tableload) {
+			  	$("div#selloutInvoiceSummaryDiv").html('<div id="loadTable"><img src="packages/main/images/preloader-w8-cycle-black.gif" /></div>');
+			  }
+			}).done(function( html ) {
+			  $("div#selloutInvoiceSummaryDiv").html(html);
+		});
+	});
+} );
+
 $(document).ready( function () {
 	$('button#filterInvoiceDetails').on('click',function() {
 		var Obj = {};
@@ -205,7 +227,7 @@ $(document).ready( function () {
 	});
 
 } );
-
+$("#branchBox").select2();
 </script>
 @stop
 
@@ -219,6 +241,7 @@ $(document).ready( function () {
 	  <ul class="nav nav-tabs">
 	    <li class="active"><a href="#invoice" data-toggle="tab">Invoice</a></li>
 	    <li><a href="#invoicedetails" data-toggle="tab">Invoice Details</a></li>
+	    <li><a href="#invoicesummary" data-toggle="tab">Invoice Summary</a></li>
 	  </ul>
 
 	  <div id="invoiceTabContent" class="tab-content">
@@ -281,6 +304,46 @@ $(document).ready( function () {
 		    	<div id="selloutInvoiceDetailsDiv">
 				</div>
 		    </div>
+	    </div>
+
+	    <div id="invoicesummary" class="tab-pane">
+		    <h4>Invoice Summary</h4>
+		    <div class="well">
+
+		    	<div class="form-inline">
+		      		<div class="span6">
+			      		<label for="isDate">Date</label>
+			      		<div class="input-append date">
+			      		<input type="text" id="isDate" data-date-format="yyyy-mm-dd" readonly><span class="add-on"><i class="icon icon-th"></i></span>
+			      		</div>
+					</div>
+					<div class="span4">
+						<label for="branchBox">Branch</label>
+			      		<select multiple name="branchBox" id="branchBox" class="span3">
+			      				<option value="all">
+			      					All
+			      				</option>
+			      				<optgroup label="Kiosk">
+			      			@foreach($branches as $branch)
+								<option value="{{$branch->branch_code}}">{{$branch->branch_name}}</option>
+			      			@endforeach
+			      				</optgroup>
+			      		</select>
+					</div>
+		      	</div>
+		      	<br>
+		      	<div class="form-inline offset4 span6">
+		      		<div>
+						<button id="suminBtn" class="btn btn-primary">Summarize</button>
+		      		</div>	
+		      	</div>
+		      	<br />
+		    	<hr />
+				
+		    	
+				<div id="selloutInvoiceSummaryDiv" ></div>
+		    </div>
+
 	    </div>
 
 	  </div><!-- /.tab-content -->

@@ -4,10 +4,13 @@ class SelloutController extends BaseController {
 
     public function getIndex()
     {
+
         $id = Session::get('account_id');
         $user = User::where('employeeid','=',$id)->first();
-    
+        $branches = Gerwin::getBranchKiosk();
+
         return View::make('sellout')
+        ->with('branches',$branches)
         ->with('role',$user->role_id);
     }
     public function postInvoice()
@@ -85,6 +88,59 @@ class SelloutController extends BaseController {
             //dd($data);
         return View::make('sellout.invoiceDetailTable')
         ->with('datas',$data);
+    }
+    public function postSummary()
+    {
+        $input = Input::all();
+
+                    $nowDate = $input['date'];
+                    $date = date('Y-m-d', strtotime($nowDate.'-1 day'));
+                
+                    $bI = Gerwin::getKiosk();
+                    
+                    $dS='';
+                    
+                    foreach ($bI as $c)
+                    {
+                        
+                            $rid = DB::table('vwretailinvoice_mdl')->where('branch_id',$c)->where('invoice_status','D')->where('invoice_date',$date)->groupBy('retail_invoice_id')->lists('retail_invoice_id');
+                             $tot=0;
+                             $tid=0;
+                             $tst=0;
+                             $tgs=0;
+                             $tta=0;
+                           for($x=0;$x<count($rid);$x++)
+                            {
+                                 $itD = (Compute::itemData($rid[$x]));
+                                 $inD = Compute::invoiceData($itD->subTotal,$itD->itemDiscount);
+                               
+                                //$tid += $itD->itemDiscount[0];
+                                //$tst += $itD->subTotal[0];
+                                $tst += $inD->totalPrice;
+                                $tta += $inD->outputTax;
+                                $tgs += $inD->grossSales;
+                                $tid += $inD->totalDiscount;
+                                $tot += $inD->netSales;
+                            }
+                           
+                            $branchId[] = $c;
+                            
+                            $groAmt[] = number_format($tst,2);
+                            $totDis[] = number_format($tid,2);
+                            $netAmt[] = number_format($tot,2);
+  
+                    }
+        
+                    return View::make('sellout.summary')
+                        ->with('branchId',$branchId)
+                        ->with('groAmt',$groAmt)
+                        ->with('totDis',$totDis)
+                        ->with('netAmt',$netAmt);
+
+    }
+    public function postInvoicesummary()
+    {
+
     }
 
 }
