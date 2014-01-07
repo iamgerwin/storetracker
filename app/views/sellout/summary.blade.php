@@ -12,10 +12,10 @@
 		@foreach($branchId as $br)
 		<tr>
 			<td>{{Gerwin::getBranchNameByBranchId($br)}}</td>
-			<td>{{$groAmt[$i]}}</td>
+			<td>{{$totPri[$i]}}</td>
 			<td>{{$totDis[$i]}}</td>
-			<td></td>
-			<td></td>
+			<td>{{$groAmt[$i]}}</td>
+			<td>{{$taxOut[$i]}}</td>
 			<td>{{$netAmt[$i]}}</td>
 		</tr>
 		<?php $i++; ?>

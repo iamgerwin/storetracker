@@ -325,7 +325,7 @@ $("#branchBox").select2();
 			      				</option>
 			      				<optgroup label="Kiosk">
 			      			@foreach($branches as $branch)
-								<option value="{{$branch->branch_code}}">{{$branch->branch_name}}</option>
+								<option value="{{$branch->branch_id}}">{{$branch->branch_name}}</option>
 			      			@endforeach
 			      				</optgroup>
 			      		</select>

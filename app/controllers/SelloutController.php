@@ -92,11 +92,21 @@ class SelloutController extends BaseController {
     public function postSummary()
     {
         $input = Input::all();
-
+                    if($input['date'] == '') {
+                        dd('date err0r');
+                    }
+                    if($input['branches'] == '') {
+                        dd('branch err0r');
+                    }
                     $nowDate = $input['date'];
-                    $date = date('Y-m-d', strtotime($nowDate.'-1 day'));
-                
-                    $bI = Gerwin::getKiosk();
+                    $date = date('Y-m-d', strtotime($nowDate.'-0 day'));
+                    if(in_array('all', $input['branches']))
+                    {
+                        $bI = Gerwin::getKiosk();
+                    } else {
+                        $bI=$input['branches'];
+                    }
+                        
                     
                     $dS='';
                     
@@ -124,14 +134,17 @@ class SelloutController extends BaseController {
                             }
                            
                             $branchId[] = $c;
-                            
-                            $groAmt[] = number_format($tst,2);
+                            $taxOut[] = number_format($tta,2);
+                            $totPri[] = number_format($tst,2);
+                            $groAmt[] = number_format($tgs,2);
                             $totDis[] = number_format($tid,2);
                             $netAmt[] = number_format($tot,2);
   
                     }
         
                     return View::make('sellout.summary')
+                        ->with('taxOut',$taxOut)
+                        ->with('totPri',$totPri)
                         ->with('branchId',$branchId)
                         ->with('groAmt',$groAmt)
                         ->with('totDis',$totDis)
