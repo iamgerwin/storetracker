@@ -92,14 +92,23 @@ class SelloutController extends BaseController {
     public function postSummary()
     {
         $input = Input::all();
-                    if($input['date'] == '') {
+                    if($input['from'] == '') {
                         dd('date err0r');
                     }
                     if($input['branches'] == '') {
                         dd('branch err0r');
                     }
-                    $nowDate = $input['date'];
+
+                    $nowDate = $input['from'];
+                    $nowDate2 = $input['to'];
                     $date = date('Y-m-d', strtotime($nowDate.'-0 day'));
+                    $date2 = date('Y-m-d', strtotime($nowDate2.'-0 day'));
+                    $dates[] = $date;
+                    $dates[] = $date2;
+                    if($date > $date2)
+                    {
+                        dd('date range err0r');
+                    }
                     if(in_array('all', $input['branches']))
                     {
                         $bI = Gerwin::getKiosk();
@@ -112,8 +121,15 @@ class SelloutController extends BaseController {
                     
                     foreach ($bI as $c)
                     {
-                        
-                            $rid = DB::table('vwretailinvoice_mdl')->where('branch_id',$c)->where('invoice_status','D')->where('invoice_date',$date)->groupBy('retail_invoice_id')->lists('retail_invoice_id');
+                            if($date2 == '' || $date2 == $date)
+                            {
+                                $rid = DB::table('vwretailinvoice_mdl')->where('branch_id',$c)->where('invoice_status','D')->where('invoice_date',$date)->groupBy('retail_invoice_id')->lists('retail_invoice_id');
+                            } 
+                            else
+                            {
+                                $rid = DB::table('vwretailinvoice_mdl')->where('branch_id',$c)->where('invoice_status','D')->whereBetween('invoice_date',[$date,$date2])->groupBy('retail_invoice_id')->lists('retail_invoice_id');
+                            }
+                            
                              $tot=0;
                              $tid=0;
                              $tst=0;
@@ -143,6 +159,7 @@ class SelloutController extends BaseController {
                     }
         
                     return View::make('sellout.summary')
+                        ->with('dates',$dates)
                         ->with('taxOut',$taxOut)
                         ->with('totPri',$totPri)
                         ->with('branchId',$branchId)

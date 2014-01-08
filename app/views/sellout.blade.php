@@ -35,7 +35,8 @@ div#loadTable{
 
 <script type="text/javascript">
 $(document).ready( function () {
-	$('#isDate').datepicker();
+	$('#isFrom').datepicker();
+	$('#isTo').datepicker();
 
 	var nowTemp = new Date();
 	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
@@ -139,7 +140,8 @@ $(document).ready( function () {
 $(document).ready( function () {
 	$('button#suminBtn').on('click',function() {
 		var Obj = {};
-		Obj.date= $('input#isDate').val();
+		Obj.from= $('input#isFrom').val();
+		Obj.to= $('input#isTo').val();
 		Obj.branches= $('select#branchBox').val();
 		$.ajax({
 			  type: "POST",
@@ -311,15 +313,21 @@ $("#branchBox").select2();
 		    <div class="well">
 
 		    	<div class="form-inline">
-		      		<div class="span6">
-			      		<label for="isDate">Date</label>
+		      		<div class="span4">
+			      		<label for="isFrom">From</label>
 			      		<div class="input-append date">
-			      		<input type="text" id="isDate" data-date-format="yyyy-mm-dd" readonly><span class="add-on"><i class="icon icon-th"></i></span>
-			      		</div>
+			      		<input type="text" id="isFrom" data-date-format="yyyy-mm-dd" readonly><span class="add-on"><i class="icon icon-th"></i></span>
+			      		</div>	
 					</div>
 					<div class="span4">
+						<label for="isTo">To</label>
+			      		<div class="input-append date">
+			      		<input type="text" id="isTo" data-date-format="yyyy-mm-dd" readonly><span class="add-on"><i class="icon icon-th"></i></span>
+			      		</div>
+					</div>
+					<div class="span3">
 						<label for="branchBox">Branch</label>
-			      		<select multiple name="branchBox" id="branchBox" class="span3">
+			      		<select multiple name="branchBox" id="branchBox" class="span2">
 			      				<option value="all">
 			      					All
 			      				</option>

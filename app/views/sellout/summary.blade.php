@@ -1,3 +1,6 @@
+<br>
+<center>Covered date: {{$dates[0]}} - {{$dates[1]}}</center>
+<hr/>
 <table class="table table-hover">
 	<thead>
 		<td>Branch Code</td>
