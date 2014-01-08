@@ -23,22 +23,23 @@
 				$subTotal = Compute::_subTotal($data->quantity,$data->unit_price);
 
 				if($data->discount_type == 0)
-					$discountPrice = Compute::_percentageDiscount($subTotal,intval($data->member_discount),intval($data->discount));
+					$discountPrice = Compute::_percentageDiscount($subTotal,($data->member_discount),($data->discount));
 				else
 					$discountPrice = Compute::_fixedDiscount($subTotal,$data->member_discount,$data->discount,$data->quantity);
 
 				$invoiceDetailsCompute = Compute::invoiceData($subTotal,$discountPrice);
+
 			?>
 			<td>{{$data->invoice_date}}</td>
 			<td>{{$data->item_code}}</td>
-			<td>{{$data->item_name}}</td>
+			<td>{{$data->item_name}} - {{$data->variant}}- {{$data->item_size}}</td>
 			<td>{{$data->branch_name}}</td>
 			<td>{{$data->invoice_number}}</td>
 
 			<td>{{$data->unit_price}}</td>
 			<td>{{$data->quantity}}</td>
-			<td>{{number_format($invoiceDetailsCompute->grossSales,2)}}</td>
-			<td>{{number_format($invoiceDetailsCompute->totalDiscount,2)}}</td>
+			<td>{{number_format($subTotal,2)}}</td>
+			<td>{{number_format($discountPrice,2)}}</td>
 			<td>{{number_format($invoiceDetailsCompute->netSales,2)}}</td>
 			<td>{{number_format($invoiceDetailsCompute->outputTax,2)}}</td>
 		</tr>
