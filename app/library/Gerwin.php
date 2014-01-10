@@ -57,6 +57,10 @@ class Gerwin {
 		else
 			return DB::table('fiametta_retail.vwretailinvoice_mdl')->where('retail_invoice_id',$invoiceRetailId)->where('invoice_status','D')->get();
 	}
+	final static function getWhitelistExist($number)
+	{
+		return Whitelist::where('mobile_number',$number)->count();
+	}
 	final public static function getRIDI($invoiceRetailId)
 	{
 		return DB::table('vwretailinvoicedetails')->where('retail_invoice_id',$invoiceRetailId)->get();

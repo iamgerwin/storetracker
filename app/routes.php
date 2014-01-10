@@ -91,3 +91,8 @@ Route::filter('authip',function()
 	if($_SERVER['REMOTE_ADDR'] == '122.52.163.202')
 		return App::abort(401,'Not Authorized');
 });
+
+Route::get('white', function()
+{
+
+});

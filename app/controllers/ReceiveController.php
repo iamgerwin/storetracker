@@ -13,6 +13,13 @@ class ReceiveController extends BaseController {
         $in = Input::all();
             $date = new DateTime($in['ts']);
             $ts = $date->format('Y-m-d H:i:s');
+            $ei = Gerwin::getWhitelistExist($in['from']);
+            if($ei < 1)
+            {
+              $msgBack = 'Your number is not Whitelisted, please don\'t panic.';
+              return Sms::sendIt($in['from'],$msgBack);
+              die();
+            }
             $whitelist = Whitelist::all();
             
                     foreach($whitelist as $w) {
@@ -93,6 +100,7 @@ class ReceiveController extends BaseController {
                                         //textBack Verification of Insert
 
                                         $msgBack = Compute::test(Gerwin::getUniqueInvoice($branchId,$invoiceNumber));
+                                        //dd($msgBack);
                                         Sms::sendIt($in['from'],$msgBack);
 
                                         return 'New Transaction Inserted!';

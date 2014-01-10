@@ -6,4 +6,9 @@ class Whitelist extends Eloquent {
     public $primaryKey = 'whitelist_id';
     public static $rules = array();
     public $timestamps = false;
+
+    public function scopeExist()
+    {
+    	
+    }
 }
