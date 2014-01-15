@@ -21,7 +21,7 @@ class ReceiveController extends BaseController {
               die();
             }
             $whitelist = Whitelist::all();
-            
+            $branchCodes = Gerwin::getAllActiveBranchCodes();
                     foreach($whitelist as $w) {
                         if($w->mobile_number == $in['from']) {
                             //insert fiametta_retail.tbl_inbox         
@@ -36,7 +36,18 @@ class ReceiveController extends BaseController {
                           
                            if($sms->status != 'ci'){
                                     $branchId = Gerwin::getBranchIdbyBranchCode($sms->branchCode);
+                                    if(!isset($branchId))
+                                    {
+                                        $msgBack = 'Your BranchCode: '.$sms->branchCode.' is Non Existing.';
+                                       return Sms::sendIt($in['from'],$msgBack);
+                                    }
                                     $contactId = Gerwin::getContactIdbyAccountCode($sms->accountCode);
+                                    if(!isset($contactId))
+                                    {
+                                        $msgBack = 'Your AccountCode: '.$sms->accountCode.' is Non Existing.';
+                                       return Sms::sendIt($in['from'],$msgBack);
+                                    }
+
                                     $invoiceNumber = $sms->invoiceNumber;
                                    
 

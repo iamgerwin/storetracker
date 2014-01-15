@@ -17,6 +17,9 @@ class Gerwin {
 	{
 		
 	}
+	public static function getAllActiveBranchCodes(){
+		return Branch::where('branch_type_id',4)->where('active',1)->lists('branch_code');
+	}
 	public static function getBranchIdbyBranchCode($code){
 		return Branch::where('branch_code',strtoupper($code))->pluck('branch_id');
 	}
