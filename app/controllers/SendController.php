@@ -13,7 +13,7 @@ class SendController extends BaseController {
     public function getSalesreport()
     {
                     $nowDate = date('Y-m-d');
-                    $date = date('Y-m-d', strtotime($nowDate.'+0 day'));
+                    $date = date('Y-m-d', strtotime($nowDate.'-1 day'));
                     
                     $bI = Gerwin::getKiosk();
                     $dS= 'Date: '.$date."\n";
@@ -21,13 +21,15 @@ class SendController extends BaseController {
                     {
                             $rid = DB::table('vwretailinvoice_mdl')->where('branch_id',$c)->where('invoice_status','D')->where('invoice_date',$date)->groupBy('retail_invoice_id')->lists('retail_invoice_id');
                              $tot =0;
+                             $gro =0;
                            for($x=0;$x<count($rid);$x++)
                             {
                                  $itD = (Compute::itemData($rid[$x]));
                                  $inD = Compute::invoiceData($itD->subTotal,$itD->itemDiscount);
                                 $tot += $inD->netSales;
+                                $gro += $inD->grossSales;
                             }
-                            $dS .= Gerwin::getBranchNameByBranchId($c).' -  '.number_format($tot,2)."\n";
+                            $dS .= Gerwin::getBranchNameByBranchId($c).' -  '.number_format($gro,2)."\n";
                     }
 
                     $nos = Gerwin::getContactReceiveSalesReport();
